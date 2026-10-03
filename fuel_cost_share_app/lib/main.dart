@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fuel_cost_share_app/widgets/traveller_counter.dart';
 import 'package:fuel_cost_share_app/widgets/tip_slider.dart';
+import 'package:fuel_cost_share_app/widgets/textfield.dart';
 
 void main() {
   runApp(const MyApp());
@@ -27,7 +28,6 @@ class Fgift extends StatefulWidget {
 }
 
 class _FgiftState extends State<Fgift> {
-  ValueChanged<double>? get onChanged => null;
   int _personCount = 1;
   double _billAmount = 00.00;
 
@@ -105,17 +105,7 @@ class _FgiftState extends State<Fgift> {
               ),
               child: Column(
                 children: [
-                  TextField(
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'Enter Fuel Cost',
-                    ),
-                    keyboardType: TextInputType.number,
-                    onChanged: (String value) {
-                      _updateFuelCost(value);
-                      print("Value: $value");
-                    },
-                  ),
+                  TextFieldFuelCost(onChanged: _updateFuelCost),
 
                   //Split Bill area
                   Row(
