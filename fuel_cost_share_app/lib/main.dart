@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fuel_cost_share_app/widgets/traveller_counter.dart';
 
 void main() {
   runApp(const MyApp());
@@ -11,7 +12,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Fgift',
-      theme: ThemeData(colorScheme: .fromSeed(seedColor: Colors.deepPurple)),
+      theme: ThemeData(colorScheme: .fromSeed(seedColor: Colors.deepOrange)),
       home: Fgift(),
     );
   }
@@ -25,6 +26,33 @@ class Fgift extends StatefulWidget {
 }
 
 class _FgiftState extends State<Fgift> {
+  ValueChanged<double>? get onChanged => null;
+  int _personCount = 1;
+  double _billAmount = 00.00;
+
+  double _giftPercentage = 0.0;
+
+  //Methods
+  void increment() {
+    setState(() {
+      _personCount = _personCount + 1;
+    });
+  }
+
+  void decrement() {
+    setState(() {
+      if (_personCount > 1) {
+        _personCount = _personCount - 1;
+      }
+    });
+  }
+
+  void _updateFuelCost(String value) {
+    setState(() {
+      _billAmount = double.tryParse(value) ?? 0.0;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
@@ -32,6 +60,10 @@ class _FgiftState extends State<Fgift> {
       color: theme.colorScheme.onPrimary,
       fontWeight: FontWeight.bold,
     );
+
+    double tip = _billAmount * _giftPercentage;
+    double totalAmount = _billAmount + tip;
+    double perPerson = totalAmount / _personCount;
     return Scaffold(
       appBar: AppBar(title: const Text('Fuel Cost Sharing')),
       body: Column(
@@ -47,7 +79,7 @@ class _FgiftState extends State<Fgift> {
               children: [
                 Text('Total Fuel Cost Per Traveller', style: style),
                 Text(
-                  '£00.00',
+                  '£${perPerson.toStringAsFixed(2)}',
                   style: style.copyWith(
                     color: theme.colorScheme.onPrimary,
                     fontSize: theme.textTheme.displaySmall?.fontSize,
@@ -59,6 +91,7 @@ class _FgiftState extends State<Fgift> {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Container(
+              padding: const EdgeInsets.all(18),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(5),
                 border: Border.all(color: theme.colorScheme.primary, width: 2),
@@ -72,6 +105,7 @@ class _FgiftState extends State<Fgift> {
                     ),
                     keyboardType: TextInputType.number,
                     onChanged: (String value) {
+                      _updateFuelCost(value);
                       print("Value: $value");
                     },
                   ),
@@ -80,18 +114,38 @@ class _FgiftState extends State<Fgift> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text("Split"),
-                      Row(
-                        children: [
-                          IconButton(
-                            onPressed: () {},
-                            icon: Icon(Icons.remove),
-                          ),
-                          Text("3"),
-                          IconButton(onPressed: () {}, icon: Icon(Icons.add)),
-                        ],
+                      Text("Split", style: theme.textTheme.titleMedium),
+                      TravellerCounter(
+                        personCount: _personCount,
+                        theme: theme,
+                        onIncrement: increment,
+                        onDecrement: decrement,
                       ),
                     ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text('Tip', style: theme.textTheme.titleMedium),
+                      Text(
+                        tip.toStringAsFixed(2),
+                        style: theme.textTheme.titleMedium,
+                      ),
+                    ],
+                  ),
+                  Text('${(_giftPercentage * 100).round()}%'),
+                  Slider(
+                    value: _giftPercentage,
+                    onChanged: (value) {
+                      setState(() {
+                        _giftPercentage = value;
+                      });
+                      _giftPercentage = value;
+                    },
+                    min: 0,
+                    max: 0.5,
+                    divisions: 5,
+                    label: '${(_giftPercentage * 100).round()}%',
                   ),
                 ],
               ),
