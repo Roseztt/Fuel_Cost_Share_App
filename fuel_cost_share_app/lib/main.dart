@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fuel_cost_share_app/widgets/traveller_counter.dart';
+import 'package:fuel_cost_share_app/widgets/tip_slider.dart';
 
 void main() {
   runApp(const MyApp());
@@ -50,6 +51,12 @@ class _FgiftState extends State<Fgift> {
   void _updateFuelCost(String value) {
     setState(() {
       _billAmount = double.tryParse(value) ?? 0.0;
+    });
+  }
+
+  void _updatePercentage(double value) {
+    setState(() {
+      _giftPercentage = value;
     });
   }
 
@@ -134,18 +141,9 @@ class _FgiftState extends State<Fgift> {
                     ],
                   ),
                   Text('${(_giftPercentage * 100).round()}%'),
-                  Slider(
-                    value: _giftPercentage,
-                    onChanged: (value) {
-                      setState(() {
-                        _giftPercentage = value;
-                      });
-                      _giftPercentage = value;
-                    },
-                    min: 0,
-                    max: 0.5,
-                    divisions: 5,
-                    label: '${(_giftPercentage * 100).round()}%',
+                  TipSlider(
+                    giftPercentage: _giftPercentage,
+                    onChanged: _updatePercentage,
                   ),
                 ],
               ),
