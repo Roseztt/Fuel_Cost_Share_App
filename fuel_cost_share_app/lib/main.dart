@@ -3,6 +3,7 @@ import 'package:fuel_cost_share_app/widgets/traveller_counter.dart';
 import 'package:fuel_cost_share_app/widgets/tip_slider.dart';
 import 'package:fuel_cost_share_app/widgets/textfield.dart';
 import 'package:fuel_cost_share_app/widgets/total_per_traveller.dart';
+import 'package:fuel_cost_share_app/widgets/tip_row.dart';
 
 void main() {
   runApp(const MyApp());
@@ -112,16 +113,7 @@ class _FgiftState extends State<Fgift> {
                       ),
                     ],
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text('Tip', style: theme.textTheme.titleMedium),
-                      Text(
-                        tip.toStringAsFixed(2),
-                        style: theme.textTheme.titleMedium,
-                      ),
-                    ],
-                  ),
+                  TipRow(theme: theme, tip: tip),
                   Text('${(_giftPercentage * 100).round()}%'),
                   TipSlider(
                     giftPercentage: _giftPercentage,
